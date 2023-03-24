@@ -52,7 +52,7 @@
             <div class="result-main__item mb-3"><strong v-if="IP">IP: </strong> {{ IP }}</div>
             <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
-          <div class="main__loader my-10 flex items-center justify-center" v-if="isLoaderVisible && !isError">
+          <div class="main__loader my-10 flex items-center justify-center" v-if="isLoaderVisible && !isError && !isValidationNotCorrect">
             <span class="loader"></span>
           </div>
           <div class="main__error font-bold flex justify-center items-center text-white p-4 bg-red-600 rounded" v-if="isError">
@@ -70,8 +70,7 @@
 </template>
 
 <script>
-/* import {getIPaddress, getInfo} from './api.js' */
-import {getAPIcall} from './api.js'
+import { getAPIcall } from './api.js'
 export default {
   name: 'App',
   data() {
@@ -108,6 +107,7 @@ export default {
   },
   methods: {
     inputFocus(event){
+      this.isLoaderVisible = false;
       this.isValidationNotCorrect = false;
       event.target.placeholder = '';
     },
