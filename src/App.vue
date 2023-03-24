@@ -54,8 +54,8 @@
             <div class="result-main__item mb-3"><strong>IP: </strong> {{ IP }}</div>
             <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
-          <div class="main__error text-center text-red-600" v-if="isError">
-              {{ errorMessage }}
+          <div class="main__error font-bold flex justify-center items-center text-white p-4 bg-red-600 rounded" v-if="isError">
+             Error: {{ errorMessage }}
           </div>
         </div>
       </div>
@@ -116,29 +116,29 @@ export default {
       this.cityData = null;
       this.isError = false;
      if(this.zipCodeLength >= 5){
-        const URL = `https://api.zippopotam.us/us/${this.zipCode}`
-        getAPIcall(URL, (err) => {
-          this.isError = true;
-          this.errorMessage = err.message;
-        }).then(data => { 
-          if(data.country){
-            this.cityData = data
-          }
-          else{
-            this.isValidationNotCorrect = true;
-          }
-        });
+      const URL = `https://api.zippopotam.us/us/${this.zipCode}`
+      getAPIcall(URL, (err) => {
+        this.isError = true;
+        this.errorMessage = err.message;
+      }).then(data => { 
+        if(data.country){
+          this.cityData = data
+        }
+        else{
+          this.isValidationNotCorrect = true;
+        }
+      });
      }
      else{
       this.isValidationNotCorrect = true;
      }
     },
     getMoreIPinfo(){
-        this.isIpInfoOpen = true;
-        const URL = `http://ip-api.com/json`;
-        getAPIcall(URL, () => {
-          this.reserveMoreIpText = 'Failed to get'
-        }).then(data => this.IpMoreInfo = data);
+      this.isIpInfoOpen = true;
+      const URL = `http://ip-api.com/json`;
+      getAPIcall(URL, () => {
+        this.reserveMoreIpText = 'Failed to get'
+      }).then(data => this.IpMoreInfo = data);
     },
   },
 }
