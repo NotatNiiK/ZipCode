@@ -3,23 +3,23 @@
     <header class="header py-3 bg-indigo-500 text-white">
       <div class="header__container max-w-6xl p-2.5 mx-auto">
         <div class="header__body flex justify-between items-center flex-wrap">
-          <a href="#" class="header__link text-2xl font-bold uppercase">Zip Code</a>
-          <button class="header__ip-btn p-2 bg-white text-indigo-500 py-2 transition-all duration-300 px-4 rounded text-lg hover:bg-gray-200"
+          <a href="#" class="header__logo text-2xl font-bold uppercase focus:outline-none">Zip Code</a>
+          <button class="header__button p-2 bg-white text-indigo-500 py-2 transition-all duration-300 px-4 rounded text-lg hover:bg-gray-200 focus:outline-none "
             @click="getMoreIPinfo"
           >Get IP</button>
           <Transition>
             <Teleport to="body">
-              <div class="ip-info fixed inset-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50" v-if="isIpInfoOpen">
-                <button class="ip-info__close-btn fixed flex justify-center items-center p-3 w-10 h-10 text-lg rounded-full transition-all duration-300 hover:bg-red-500 bg-red-700 text-white top-4 right-4"
+              <div class="ip-popup fixed inset-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50" v-if="isIpInfoOpen">
+                <button class="ip-popup__close-btn fixed flex justify-center items-center p-3 w-10 h-10 text-lg rounded-full transition-all duration-300 hover:bg-red-500 bg-red-700 text-white top-4 right-4"
                   @click="isIpInfoOpen = false"
                 >X</button>
-                <div class="ip-info__body w-10/12 md:w-4/6 mx-auto h-96 rounded-md p-4 bg-white text-gray-800">
-                  <h2 class="ip-info__title font-bold text-center text-xl p-4">Detailed information about IP address</h2>
+                <div class="ip-popup__body w-10/12 md:w-4/6 mx-auto h-96 rounded-md p-4 bg-white text-gray-800">
+                  <h2 class="ip-popup__title font-bold text-center text-xl p-4">Detailed information about IP address</h2>
                   <template v-if='IpMoreInfo'>
-                    <div class="ip-info__item text-lg px-6 py-2"><strong>IP:</strong> {{ IpMoreInfo.ip }}</div>
-                    <div class="ip-info__item text-lg px-6 py-2"><strong>City:</strong> {{ IpMoreInfo.city }}</div>
-                    <div class="ip-info__item text-lg px-6 py-2"><strong>Region:</strong> {{ IpMoreInfo.region }}</div>
-                    <div class="ip-info__item text-lg px-6 py-2"><strong>ISP:</strong> {{ IpMoreInfo.org }}</div>
+                    <div class="ip-popup__item text-lg px-6 py-2"><strong>IP:</strong> {{ IpMoreInfo.query }}</div>
+                    <div class="ip-popup__item text-lg px-6 py-2"><strong>City:</strong> {{ IpMoreInfo.city }}</div>
+                    <div class="ip-popup__item text-lg px-6 py-2"><strong>Region:</strong> {{ IpMoreInfo.regionName }}</div>
+                    <div class="ip-popup__item text-lg px-6 py-2"><strong>ISP:</strong> {{ IpMoreInfo.org }}</div>
                   </template>
                   <div v-else>{{ reserveMoreIpText }}</div>
                 </div>
@@ -32,24 +32,27 @@
     <main class="main py-20 flex-auto">
       <div class="main__container max-w-6xl p-3.5 mx-auto">
         <div class="main__body max-w-xl mx-auto uppercase">
-          <form action="#" class="main__form mb-4 flex" @submit.prevent>
-            <input type="number" class="main__input inline-block flex-auto px-4 py-3 border-2 rounded border-indigo-500 outline-none transition-all duration-300 focus:shadow-md" placeholder="Enter zip code..."
-              v-model="zipCode"
-              @focus="isValidationNotCorrect = false"
-            />
-            <button class="main__button bg-indigo-500 text-white ml-4 text-lg uppercase rounded px-6 py-3 transition-all duration-300 hover:bg-indigo-700 focus:bg-indigo-700 outline-none"
-              @click="getInfo"
-            >Get</button>
+          <form action="#" class="main__form form-main mb-4 " @submit.prevent>
+            <div class="main__inputs flex">
+              <input type="number" class="form-main__input inline-block flex-auto px-4 py-3 border-2 rounded border-indigo-500 outline-none transition-all duration-300 focus:shadow-md" placeholder="Enter zip code..."
+                v-model="zipCode"
+                @focus="inputFocus"
+                @blur="inputBlur"
+              />
+              <button class="form-main__button bg-indigo-500 text-white ml-4 text-lg uppercase rounded px-6 py-3 transition-all duration-300 hover:bg-indigo-700 focus:bg-indigo-700 outline-none"
+                @click="getInfoByZipCode"
+              >Get</button>
+            </div>
+            <Transition>
+              <div class="main__validation text-red-600 font-bold py-2" v-if="isValidationNotCorrect">Enter correct data!</div>
+            </Transition>
           </form>
-          <Transition>
-            <div class="main__validation text-red-600 font-bold py-2" v-if="isValidationNotCorrect">Enter correct data!</div>
-          </Transition>
-          <div class="main__result py-6 normal-case text-lg bg-indigo-500 text-white rounded-lg p-4" v-if="cityData">
-            <div class="main__item mb-3"><strong>Country: </strong> {{ cityData.country }}</div>
-            <div class="main__item mb-3"><strong>State: </strong> {{ cityData.places[0].state }}</div>
-            <div class="main__item mb-3"><strong v-if="httpReferrer">HTTP Referer: </strong> {{ httpReferrer }}</div>
-            <div class="main__item mb-3"><strong>IP: </strong> {{ IP }}</div>
-            <div class="main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
+          <div class="main__result result-main py-6 normal-case text-lg bg-indigo-500 text-white rounded-lg p-4" v-if="cityData">
+            <div class="result-main__item mb-3"><strong>Country: </strong> {{ cityData.country }}</div>
+            <div class="result-main__item mb-3"><strong>State: </strong> {{ cityData.places[0].state }}</div>
+            <div class="result-main__item mb-3"><strong v-if="httpReferrer">HTTP Referer: </strong> {{ httpReferrer }}</div>
+            <div class="result-main__item mb-3"><strong>IP: </strong> {{ IP }}</div>
+            <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
           <div class="main__error text-center text-red-600" v-if="isError">
               {{ errorMessage }}
@@ -66,6 +69,7 @@
 </template>
 
 <script>
+import {getIPaddress, getInfo} from './api.js'
 export default {
   name: 'App',
   data() {
@@ -96,49 +100,42 @@ export default {
     })
     this.httpReferrer = document.referrer;
     this.userAgent = navigator.userAgent;
-    this.getIP();
+    getIPaddress().then(data => this.IP = data.query);
   },
   methods: {
-    async getIP(){
-      try{
-        const URL = 'https://api.ipify.org?format=json';
-        const request = await (await fetch(URL)).json();
-        const result = await request.ip;
-        this.IP = result;
-      }catch(err){
-        this.IP = 'Failed to get'
-      }
+    inputFocus(event){
+      this.isValidationNotCorrect = false;
+      event.target.placeholder = '';
     },
-    async getInfo(){
+    inputBlur(event){
+      event.target.placeholder = 'Enter zip code...';
+    },
+    async getInfoByZipCode(){
       this.cityData = null;
       this.isError = false;
-      if(this.zipCodeLength >= 5){
-        try{
-          const URL = `https://api.zippopotam.us/us/${this.zipCode}`;
-          const request = await (await fetch(URL)).json();
-          const result = await request;
-          if(result.country){
-            this.cityData = result;
+     if(this.zipCodeLength >= 5){
+      try{
+        getInfo(this.zipCode).then(data => { 
+          if(data.country){
+            this.cityData = data
           }
           else{
             this.isValidationNotCorrect = true;
           }
-        } catch(err){
+        });
+      } catch(err){
           this.isError = true;
           this.errorMessage = err.message;
         }
-      }
+     }
      else{
       this.isValidationNotCorrect = true;
      }
     },
-    async getMoreIPinfo(){
+    getMoreIPinfo(){
       try{
         this.isIpInfoOpen = true;
-        const URL = `https://ipinfo.io/${this.IP}/json?token=a1a108d7ecb749`;
-        const request = (await fetch(URL)).json();
-        const result = await request;
-        this.IpMoreInfo = result;
+        getIPaddress().then(data => this.IpMoreInfo = data);
       }catch(err){
         this.reserveMoreIpText = 'Failed to get'
       }
