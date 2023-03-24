@@ -8,12 +8,11 @@
             @click="getMoreIPinfo"
           >Get IP</button>
           <Transition>
-            <Teleport to="body">
-              <div class="ip-popup fixed inset-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50" v-if="isIpInfoOpen">
-                <button class="ip-popup__close-btn fixed flex justify-center items-center p-3 w-10 h-10 text-lg rounded-full transition-all duration-300 hover:bg-red-500 bg-red-700 text-white top-4 right-4"
+              <div class="ip-popup fixed inset-0 flex justify-center items-center w-full h-full bg-black bg-opacity-80" v-if="isIpInfoOpen">
+                <button class="ip-popup__close-btn fixed flex justify-center items-center p-3 w-12 h-12 text-lg font-bold rounded-full transition-all duration-300 hover:bg-red-500 bg-red-600 text-white top-14 right-14"
                   @click="isIpInfoOpen = false"
                 >X</button>
-                <div class="ip-popup__body w-10/12 md:w-4/6 mx-auto h-96 rounded-md p-4 bg-white text-gray-800">
+                <div class="ip-popup__body w-10/12 md:max-w-screen-sm mx-auto h-96 rounded-md p-4 bg-white text-gray-800">
                   <h2 class="ip-popup__title font-bold text-center text-xl p-4">Detailed information about IP address</h2>
                   <template v-if='IpMoreInfo'>
                     <div class="ip-popup__item text-lg px-6 py-2"><strong>IP:</strong> {{ IpMoreInfo.query }}</div>
@@ -24,7 +23,6 @@
                   <div v-else>{{ reserveMoreIpText }}</div>
                 </div>
               </div>
-            </Teleport>
           </Transition>
         </div>
       </div>
@@ -51,7 +49,7 @@
             <div class="result-main__item mb-3"><strong>Country: </strong> {{ cityData.country }}</div>
             <div class="result-main__item mb-3"><strong>State: </strong> {{ cityData.places[0].state }}</div>
             <div class="result-main__item mb-3"><strong v-if="httpReferrer">HTTP Referer: </strong> {{ httpReferrer }}</div>
-            <div class="result-main__item mb-3"><strong>IP: </strong> {{ IP }}</div>
+            <div class="result-main__item mb-3"><strong v-if="IP">IP: </strong> {{ IP }}</div>
             <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
           <div class="main__error font-bold flex justify-center items-center text-white p-4 bg-red-600 rounded" v-if="isError">
