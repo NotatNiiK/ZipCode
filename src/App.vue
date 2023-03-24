@@ -20,7 +20,7 @@
                     <div class="ip-popup__item text-lg px-6 py-2"><strong>Region:</strong> {{ IpMoreInfo.regionName }}</div>
                     <div class="ip-popup__item text-lg px-6 py-2"><strong>ISP:</strong> {{ IpMoreInfo.org }}</div>
                   </template>
-                  <div v-else>{{ reserveMoreIpText }}</div>
+                  <div class="ip-popup__error m-3 p-4 rounded text-white bg-red-600 text-center font-bold uppercase" v-else>{{ reserveMoreIpText }}</div>
                 </div>
               </div>
           </Transition>
@@ -52,7 +52,7 @@
             <div class="result-main__item mb-3"><strong v-if="IP">IP: </strong> {{ IP }}</div>
             <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
-          <div class="main__loader my-10 flex items-center justify-center" v-if="isLoaderVisible">
+          <div class="main__loader my-10 flex items-center justify-center" v-if="isLoaderVisible && !isError">
             <span class="loader"></span>
           </div>
           <div class="main__error font-bold flex justify-center items-center text-white p-4 bg-red-600 rounded" v-if="isError">
@@ -175,7 +175,7 @@ input::-webkit-inner-spin-button {
 .loader {
   width: 68px;
   height: 68px;
-  border: 6px solid #000;
+  border: 6px solid #6366f1;
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
@@ -190,5 +190,5 @@ input::-webkit-inner-spin-button {
   100% {
       transform: rotate(360deg);
   }
-  } 
+} 
 </style>
