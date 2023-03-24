@@ -69,7 +69,8 @@
 </template>
 
 <script>
-import {getIPaddress, getInfo} from './api.js'
+/* import {getIPaddress, getInfo} from './api.js' */
+import {getAPIcall} from './api.js'
 export default {
   name: 'App',
   data() {
@@ -100,7 +101,8 @@ export default {
     })
     this.httpReferrer = document.referrer;
     this.userAgent = navigator.userAgent;
-    getIPaddress().then(data => this.IP = data.query);
+    const URL = `http://ip-api.com/json`;
+    getAPIcall(URL).then(data => this.IP = data.query);
   },
   methods: {
     inputFocus(event){
@@ -115,7 +117,8 @@ export default {
       this.isError = false;
      if(this.zipCodeLength >= 5){
       try{
-        getInfo(this.zipCode).then(data => { 
+        const URL = `https://api.zippopotam.us/us/${this.zipCode}`
+        getAPIcall(URL).then(data => { 
           if(data.country){
             this.cityData = data
           }
@@ -135,7 +138,8 @@ export default {
     getMoreIPinfo(){
       try{
         this.isIpInfoOpen = true;
-        getIPaddress().then(data => this.IpMoreInfo = data);
+        const URL = `http://ip-api.com/json`;
+        getAPIcall(URL).then(data => this.IpMoreInfo = data);
       }catch(err){
         this.reserveMoreIpText = 'Failed to get'
       }
