@@ -116,9 +116,11 @@ export default {
       this.cityData = null;
       this.isError = false;
      if(this.zipCodeLength >= 5){
-      try{
         const URL = `https://api.zippopotam.us/us/${this.zipCode}`
-        getAPIcall(URL).then(data => { 
+        getAPIcall(URL, (err) => {
+          this.isError = true;
+          this.errorMessage = err.message;
+        }).then(data => { 
           if(data.country){
             this.cityData = data
           }
@@ -126,23 +128,17 @@ export default {
             this.isValidationNotCorrect = true;
           }
         });
-      } catch(err){
-          this.isError = true;
-          this.errorMessage = err.message;
-        }
      }
      else{
       this.isValidationNotCorrect = true;
      }
     },
     getMoreIPinfo(){
-      try{
         this.isIpInfoOpen = true;
         const URL = `http://ip-api.com/json`;
-        getAPIcall(URL).then(data => this.IpMoreInfo = data);
-      }catch(err){
-        this.reserveMoreIpText = 'Failed to get'
-      }
+        getAPIcall(URL, () => {
+          this.reserveMoreIpText = 'Failed to get'
+        }).then(data => this.IpMoreInfo = data);
     },
   },
 }
