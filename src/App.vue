@@ -52,6 +52,9 @@
             <div class="result-main__item mb-3"><strong v-if="IP">IP: </strong> {{ IP }}</div>
             <div class="result-main__item mb-3"><strong>User Agent: </strong> {{ userAgent }}</div>
           </div>
+          <div class="main__loader my-10 flex items-center justify-center" v-if="isLoaderVisible">
+            <span class="loader"></span>
+          </div>
           <div class="main__error font-bold flex justify-center items-center text-white p-4 bg-red-600 rounded" v-if="isError">
              Error: {{ errorMessage }}
           </div>
@@ -78,6 +81,7 @@ export default {
       httpReferrer: '',
       IP: null,
       userAgent: null,
+      isLoaderVisible: false,
       isValidationNotCorrect: false,
       isError: false,
       isIpInfoOpen: false,
@@ -110,7 +114,8 @@ export default {
     inputBlur(event){
       event.target.placeholder = 'Enter zip code...';
     },
-    async getInfoByZipCode(){
+    getInfoByZipCode(){
+      this.isLoaderVisible = true;
       this.cityData = null;
       this.isError = false;
      if(this.zipCodeLength >= 5){
@@ -120,7 +125,8 @@ export default {
         this.errorMessage = err.message;
       }).then(data => { 
         if(data.country){
-          this.cityData = data
+          this.cityData = data;
+          this.isLoaderVisible = false;
         }
         else{
           this.isValidationNotCorrect = true;
@@ -166,4 +172,23 @@ input::-webkit-inner-spin-button {
 .v-leave-to {
   opacity: 0;
 }
+.loader {
+  width: 68px;
+  height: 68px;
+  border: 6px solid #000;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+  } 
 </style>
